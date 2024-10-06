@@ -1,0 +1,5 @@
+data_path: '../data'
+mall_data_path: '../data/Mall'
+mall_zip_path: 'crowd-counting.zip'
+shan_data_path: '../data/ShanghaiTech'
+shan_zip_path: 'shanghaitech-with-people-density-map.zip'

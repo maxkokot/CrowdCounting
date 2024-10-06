@@ -1,0 +1,10 @@
+batch_size: 32
+pretraining_num_epochs: 30
+training_num_epochs: 50
+n_iter: 10
+pretrain_test_size: 0.01
+trainval_size: 0.8
+random_state: 42
+mall_data_path: '../data/Mall'
+shan_data_path: '../data/ShanghaiTech'
+model_path: '../models'
