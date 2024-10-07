@@ -34,39 +34,66 @@ def read_mall_data(mall_data_path, trainval_size, random_state):
 
 
 def read_shan_data(shan_data_path, pretrain_test_size, random_state):
-    shan_info = []
 
-    for dir_1 in os.listdir(shan_data_path):
+    '''explore nested organization of shanghai dataset
+    and extract the data
+    '''
 
-        for dir_2 in os.listdir(os.path.join(shan_data_path, dir_1).
-                                replace("\\", "/")):
-            files_lst = os.listdir(os.path.join(shan_data_path, dir_1,
-                                                dir_2, 'images').
-                                   replace("\\", "/"))
-            gt_list = os.listdir(os.path.join(shan_data_path, dir_1,
-                                              dir_2, 'ground-truth').
-                                 replace("\\", "/"))
-
-            for i, gt in enumerate(gt_list):
-
-                img_name = files_lst[i]
-                mat = scipy.io.loadmat(os.path.join(shan_data_path, dir_1,
-                                                    dir_2, 'ground-truth',
-                                                    gt).replace("\\", "/"))
-                count_ = mat['image_info'][0][0][0][0][1][0][0]
-                shan_info.append({'id': i, 'count': count_,
-                                  'image_name': os.path.join(shan_data_path,
-                                                             dir_1, dir_2,
-                                                             'images',
-                                                             img_name).
-                                  replace("\\", "/")})
-
+    shan_info = _explore_lvl_1_shan(shan_data_path)
     shan_df = pd.DataFrame(shan_info)
     trainval_shan_df, \
         test_shan_df = train_test_split(shan_df,
                                         test_size=pretrain_test_size,
                                         random_state=random_state)
     return trainval_shan_df, test_shan_df
+
+
+def _explore_lvl_1_shan(shan_data_path):
+
+    shan_info = []
+    for dir_1 in os.listdir(shan_data_path):
+        shan_info = _explore_lvl_2_shan(shan_info,
+                                        shan_data_path,
+                                        dir_1)
+
+    return shan_info
+
+
+def _explore_lvl_2_shan(shan_info, shan_data_path, dir_1):
+
+    for dir_2 in os.listdir(os.path.join(shan_data_path, dir_1).
+                            replace("\\", "/")):
+        files_lst = os.listdir(os.path.join(shan_data_path, dir_1,
+                                            dir_2, 'images').
+                               replace("\\", "/"))
+        gt_list = os.listdir(os.path.join(shan_data_path, dir_1,
+                                          dir_2, 'ground-truth').
+                             replace("\\", "/"))
+        shan_info = _explore_lvl_3_shan(shan_info, shan_data_path,
+                                        dir_1, dir_2, gt_list,
+                                        files_lst)
+
+    return shan_info
+
+
+def _explore_lvl_3_shan(shan_info, shan_data_path, dir_1,
+                        dir_2, gt_list, files_lst):
+
+    for i, gt in enumerate(gt_list):
+
+        img_name = files_lst[i]
+        mat = scipy.io.loadmat(os.path.join(shan_data_path, dir_1,
+                                            dir_2, 'ground-truth',
+                                            gt).replace("\\", "/"))
+        count_ = mat['image_info'][0][0][0][0][1][0][0]
+        shan_info.append({'id': i, 'count': count_,
+                          'image_name': os.path.join(shan_data_path,
+                                                     dir_1, dir_2,
+                                                     'images',
+                                                     img_name).
+                         replace("\\", "/")})
+
+    return shan_info
 
 
 def train_model(model, pretrain_n_unfreeze, train_n_unfreeze,
