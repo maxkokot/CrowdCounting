@@ -9,7 +9,8 @@ This code is my contribution for following project: https://github.com/Di40/Crow
 
 ### Downloading data
 
-Download images by using src/download_data.sh
+First ensure that kaggle package has been installed on your system. Also generate your API token and put at at ~/.kaggle/kaggle.json. The procedure is described here: https://www.kaggle.com/docs/api
+Next download datasets by using src/download_data.sh
 
 ```
 bash download_data.sh

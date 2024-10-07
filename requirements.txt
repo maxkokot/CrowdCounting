@@ -7,6 +7,7 @@ Sphinx
 coverage
 awscli
 flake8
+kaggle==1.6.17
 numpy==1.25.1
 matplotlib==1.21.3
 optuna==3.1.0
